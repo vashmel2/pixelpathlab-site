@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixelPath Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0b0b0c;
+      --bg-card:    #111113;
+      --fg:         #f0efec;
+      --fg-dim:     rgba(240,239,236,0.42);
+      --fg-dimmer:  rgba(240,239,236,0.22);
+      --accent:     oklch(0.65 0.22 248);
+      --accent-dim: oklch(0.65 0.22 248 / 0.15);
+      --border:     rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.14);
+      --glow:       0 0 32px oklch(0.65 0.22 248 / 0.25), 0 0 1px oklch(0.65 0.22 248 / 0.6);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* dot-grid texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* noise grain overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 1;
+      animation: drift 8s linear infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translate(0,0); }
+      to   { transform: translate(2%,1%); }
+    }
+
+    /* layout wrapper */
+    .wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 22px 0;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.4s, background 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(11,11,12,0.85);
+      backdrop-filter: blur(16px);
+      border-color: var(--border);
+    }
+    nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--fg);
+      text-decoration: none;
+      opacity: 0.85;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--fg-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--fg); }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+    }
+    .hero-inner {
+      padding: 120px 0 100px;
+    }
+    .hero-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .hero-label.visible { opacity: 1; transform: none; }
+
+    h1.hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: clamp(72px, 10vw, 148px);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      margin-bottom: 44px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+    }
+    h1.hero-title.visible { opacity: 1; transform: none; }
+
+    .hero-tagline {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--fg-dim);
+      max-width: 480px;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.8s ease 0.25s, transform 0.8s ease 0.25s;
+    }
+    .hero-tagline.visible { opacity: 1; transform: none; }
+
+    .hero-scroll {
+      margin-top: 80px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      transition: opacity 0.8s ease 0.5s;
+    }
+    .hero-scroll.visible { opacity: 1; }
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--fg-dimmer);
+    }
+    .scroll-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--fg-dimmer);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── SECTION LABEL ─────────────────────────────────── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-dimmer);
+      margin-bottom: 56px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::before {
+      content: '/';
+      color: var(--accent);
+      font-size: 14px;
+    }
+    .section-label .line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── PRODUCTS ─────────────────────────────────────── */
+    #products {
+      padding: 120px 0;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .products-grid { grid-template-columns: 1fr; }
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+      opacity: 0;
+      transform: translateY(32px);
+    }
+    .product-card.visible { opacity: 1; transform: none; }
+    .product-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--glow);
+      transform: translateY(-3px);
+    }
+
+    /* card glow background */
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, oklch(0.65 0.22 248 / 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .product-card:hover::before { opacity: 1; }
+
+    .card-status {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 28px;
+    }
+    .status-live {
+      color: oklch(0.72 0.17 152);
+      background: oklch(0.72 0.17 152 / 0.1);
+      border: 1px solid oklch(0.72 0.17 152 / 0.25);
+    }
+    .status-dev {
+      color: oklch(0.72 0.12 50);
+      background: oklch(0.72 0.12 50 / 0.1);
+      border: 1px solid oklch(0.72 0.12 50 / 0.22);
+    }
+
+    .card-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      color: var(--fg);
+    }
+
+    .card-desc {
+      font-size: 15px;
+      color: var(--fg-dim);
+      line-height: 1.65;
+      margin-bottom: 36px;
+      font-weight: 300;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .meta-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--fg-dimmer);
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 32px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: gap 0.2s ease;
+    }
+    .card-link:hover { gap: 14px; }
+    .card-link .arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+    .card-link:hover .arrow { transform: translateX(3px); }
+
+    /* locked card */
+    .card-locked .card-name,
+    .card-locked .card-desc {
+      filter: blur(4px);
+      user-select: none;
+      transition: filter 0.4s ease;
+    }
+    .card-locked:hover .card-name,
+    .card-locked:hover .card-desc {
+      filter: blur(3px);
+    }
+
+    .locked-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(to bottom, transparent 30%, rgba(17,17,19,0.6) 100%);
+      pointer-events: none;
+    }
+
+    .lock-icon {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--fg-dimmer);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .lock-icon svg {
+      opacity: 0.5;
+    }
+
+    .locked-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--fg-dimmer);
+      letter-spacing: 0.1em;
+    }
+
+    /* steam badge */
+    .steam-badge {
+      margin-top: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--fg-dimmer);
+      letter-spacing: 0.08em;
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 3px;
+    }
+    .steam-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: oklch(0.72 0.12 50 / 0.7);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── ABOUT ────────────────────────────────────────── */
+    #about {
+      padding: 120px 0;
+    }
+
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .about-left {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .about-left.visible { opacity: 1; transform: none; }
+
+    .about-right {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
+    }
+    .about-right.visible { opacity: 1; transform: none; }
+
+    .about-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 52px;
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      color: var(--fg);
+    }
+
+    .about-body {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--fg-dim);
+      line-height: 1.75;
+      max-width: 540px;
+    }
+    .about-body p + p { margin-top: 20px; }
+
+    .about-detail {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .about-detail-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--fg-dimmer);
+      letter-spacing: 0.06em;
+    }
+    .about-detail-item::before {
+      content: '';
+      display: inline-block;
+      width: 20px; height: 1px;
+      background: var(--fg-dimmer);
+    }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      opacity: 0.7;
+    }
+    .footer-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--fg-dimmer);
+      letter-spacing: 0.08em;
+    }
+    .footer-right {
+      text-align: right;
+    }
+    .footer-dti {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--fg-dimmer);
+      letter-spacing: 0.06em;
+      line-height: 1.8;
+    }
+    .footer-year {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: oklch(0.65 0.22 248 / 0.5);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── SCROLL ANIMATIONS ─────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+
+    /* ── ACCENT LINE ──────────────────────────────────── */
+    .accent-bar {
+      display: inline-block;
+      width: 3px;
+      height: 1.1em;
+      background: var(--accent);
+      border-radius: 2px;
+      vertical-align: middle;
+      margin-right: 14px;
+      position: relative;
+      top: -1px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="wrap">
+      <a class="nav-logo" href="#">PixelPath Lab</a>
+      <ul class="nav-links">
+        <li><a href="#products">Products</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="wrap">
+      <div class="hero-inner">
+        <div class="hero-label" id="hero-label">Independent Software Studio</div>
+        <h1 class="hero-title" id="hero-title">Pixel<br>Path<br>Lab</h1>
+        <p class="hero-tagline" id="hero-tagline">
+          Quietly building products people use.<br>
+          Based in the Philippines.
+        </p>
+        <div class="hero-scroll" id="hero-scroll">
+          <div class="scroll-line"></div>
+          <span class="scroll-label">Scroll to explore</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="products">
+    <div class="wrap">
+      <div class="section-label fade-up">
+        Products<div class="line"></div>
+      </div>
+
+      <div class="products-grid">
+        <!-- RunMate Card -->
+        <div class="product-card" style="transition-delay: 0.05s;">
+          <span class="card-status status-live">● Live</span>
+          <div class="card-name">RunMate</div>
+          <p class="card-desc">A race journal and running community for Filipino runners. Log races, track PRs, connect with the community. Real users. Real finish lines.</p>
+          <div class="card-meta">
+            <span class="meta-tag">Web · Mobile Browser</span>
+            <span class="meta-tag">Consumer</span>
+            <span class="meta-tag">Community</span>
+          </div>
+          <a href="https://runmateapp.com" target="_blank" class="card-link">
+            runmateapp.com <span class="arrow">→</span>
+          </a>
+        </div>
+
+        <!-- Last Letter Card -->
+        <div class="product-card" style="transition-delay: 0.15s;">
+          <span class="card-status status-live">● Live</span>
+          <div class="card-name">Last Letter</div>
+          <p class="card-desc">Compose messages to be delivered to loved ones at a future time. A digital legacy app built for the moments that matter most.</p>
+          <div class="card-meta">
+            <span class="meta-tag">Web</span>
+            <span class="meta-tag">Personal</span>
+            <span class="meta-tag">Legacy</span>
+          </div>
+          <a href="https://lastletter.app" target="_blank" class="card-link">
+            lastletter.app <span class="arrow">→</span>
+          </a>
+        </div>
+
+        <!-- AvatarFlex Card -->
+        <div class="product-card" style="transition-delay: 0.25s;">
+          <span class="card-status status-live">● Live</span>
+          <div class="card-name">AvatarFlex</div>
+          <p class="card-desc">Roblox avatar showcase and community battles. Create stat cards, compete in head-to-head voting, earn flex points, climb leaderboards. 1,200+ active users.</p>
+          <div class="card-meta">
+            <span class="meta-tag">Web</span>
+            <span class="meta-tag">Roblox Community</span>
+            <span class="meta-tag">Free</span>
+          </div>
+          <a href="https://avatarflex.com" target="_blank" class="card-link">
+            avatarflex.com <span class="arrow">→</span>
+          </a>
+        </div>
+
+        <!-- MakeIntegration Card -->
+        <div class="product-card" style="transition-delay: 0.35s;">
+          <span class="card-status status-live">● Live</span>
+          <div class="card-name">MakeIntegration</div>
+          <p class="card-desc">Free toolkit for Make.com automation professionals. Five browser-based tools: Webhook Inspector, Scenario Documenter, Analyzer, Blueprint Diff, Dependency Mapper. No login required.</p>
+          <div class="card-meta">
+            <span class="meta-tag">Web · Browser Tools</span>
+            <span class="meta-tag">Free</span>
+            <span class="meta-tag">No Login</span>
+          </div>
+          <a href="https://makeintegration.com" target="_blank" class="card-link">
+            makeintegration.com <span class="arrow">→</span>
+          </a>
+        </div>
+
+        <!-- Untitled Game Card -->
+        <div class="product-card card-locked" style="transition-delay: 0.45s;">
+          <span class="card-status status-dev">◎ In Development</span>
+          <div class="card-name">RPG Game</div>
+          <p class="card-desc">An RPG in development. A world being built carefully, a story worth telling. Details kept close until it's ready.</p>
+          <div class="card-meta">
+            <span class="meta-tag">PC · Steam</span>
+            <span class="meta-tag">RPG</span>
+            <span class="meta-tag">TBA 2026</span>
+          </div>
+          <div class="locked-overlay">
+            <div class="lock-icon">
+              <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="7" width="12" height="9" rx="1.5" stroke="white" stroke-width="1.3"/>
+                <path d="M4 7V4.5a3 3 0 0 1 6 0V7" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="locked-text">Identity unrevealed</span>
+          </div>
+          <div class="steam-badge">
+            <span class="steam-dot"></span>
+            Targeting Steam release
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-label fade-up">
+        About<div class="line"></div>
+      </div>
+      <div class="about-inner">
+        <div class="about-left">
+          <div class="about-headline">Products,<br>not<br>promises.</div>
+        </div>
+        <div class="about-right">
+          <div class="about-body">
+            <p>PixelPath Lab is a solo independent software studio. Not an agency. Not a freelancer. A studio that owns what it builds.</p>
+            <p>Every product ships with intention — designed for real people, built to last, and measured by whether people actually use it.</p>
+            <p>Based in the Philippines, building for the world.</p>
+          </div>
+          <div class="about-detail">
+            <div class="about-detail-item">Cebu, Philippines</div>
+            <div class="about-detail-item">Consumer apps &amp; games</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <div class="footer-name">PixelPath Software Publishing House</div>
+          <div class="footer-sub">/ Built in the Philippines</div>
+        </div>
+        <div class="footer-right">
+          <div class="footer-dti">DTI Business Name No. 8145950 · Philippines</div>
+          <div class="footer-year">© 2026 PixelPath Software Publishing House. All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // ── Hero entrance (immediate)
+    requestAnimationFrame(() => {
+      setTimeout(() => document.getElementById('hero-label').classList.add('visible'), 100);
+      setTimeout(() => document.getElementById('hero-title').classList.add('visible'), 200);
+      setTimeout(() => document.getElementById('hero-tagline').classList.add('visible'), 400);
+      setTimeout(() => document.getElementById('hero-scroll').classList.add('visible'), 700);
+    });
+
+    // ── Scroll-triggered fade-ups
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up, .product-card, .about-left, .about-right').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ── Parallax accent — subtle mouse tilt on cards
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width  - 0.5;
+        const y = (e.clientY - rect.top)  / rect.height - 0.5;
+        card.style.transform = `translateY(-3px) rotateX(${-y * 4}deg) rotateY(${x * 4}deg)`;
+        card.style.transformOrigin = 'center center';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.transformOrigin = '';
+      });
+    });
+
+    // ── Tweaks panel support
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accentColor": "electric-blue",
+      "grainVisible": false,
+      "cardHoverGlow": true
+    }/*EDITMODE-END*/;
+
+    let tweaks = { ...TWEAK_DEFAULTS };
+
+    const ACCENT_OPTIONS = {
+      "electric-blue": "oklch(0.65 0.22 248)",
+      "deep-amber":    "oklch(0.72 0.16 68)",
+      "cold-white":    "oklch(0.94 0.01 248)"
+    };
+
+    function applyTweaks() {
+      document.documentElement.style.setProperty('--accent', ACCENT_OPTIONS[tweaks.accentColor] || ACCENT_OPTIONS['electric-blue']);
+      document.documentElement.style.setProperty('--accent-dim', (ACCENT_OPTIONS[tweaks.accentColor] || ACCENT_OPTIONS['electric-blue']).replace(')', ' / 0.15)'));
+      document.body.style.setProperty('--grain-opacity', tweaks.grainVisible ? '0.028' : '0');
+    }
+
+    applyTweaks();
+
+    // ── Tweaks panel UI
+    const panel = document.createElement('div');
+    panel.id = 'tweaks-panel';
+    panel.style.cssText = `
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      background: rgba(17,17,19,0.97); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 20px 24px; width: 240px;
+      font-family: 'DM Mono', monospace; font-size: 12px;
+      color: rgba(240,239,236,0.6); display: none;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    `;
+    panel.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <span style="color:#f0efec;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">Tweaks</span>
+        <button id="tweaks-close" style="background:none;border:none;color:rgba(240,239,236,0.4);cursor:pointer;font-size:16px;line-height:1;padding:0;">×</button>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;color:rgba(240,239,236,0.35);">Accent Color</div>
+        <div style="display:flex;flex-direction:column;gap:6px;" id="accent-options">
+          ${Object.entries({'electric-blue':'Electric Blue','deep-amber':'Deep Amber','cold-white':'Cold White'}).map(([k,v]) => `
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+              <input type="radio" name="accent" value="${k}" ${tweaks.accentColor === k ? 'checked' : ''} style="accent-color:${ACCENT_OPTIONS[k]};">
+              <span style="color:rgba(240,239,236,0.7);">${v}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:0;">
+        <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+          <span style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,239,236,0.35);">Grain Texture</span>
+          <input type="checkbox" id="grain-toggle" ${tweaks.grainVisible ? 'checked' : ''} style="cursor:pointer;">
+        </label>
+      </div>
+    `;
+    document.body.appendChild(panel);
+
+    document.getElementById('tweaks-close').onclick = () => {
+      panel.style.display = 'none';
+      window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+    };
+
+    panel.querySelectorAll('input[name="accent"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        tweaks.accentColor = radio.value;
+        applyTweaks();
+        window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { accentColor: tweaks.accentColor } }, '*');
+      });
+    });
+
+    document.getElementById('grain-toggle').addEventListener('change', function() {
+      tweaks.grainVisible = this.checked;
+      applyTweaks();
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { grainVisible: tweaks.grainVisible } }, '*');
+    });
+
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === '__activate_edit_mode')   panel.style.display = 'block';
+      if (e.data?.type === '__deactivate_edit_mode') panel.style.display = 'none';
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+  </script>
+</body>
+</html>
