@@ -3,7 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixelPath Lab</title>
+  <title>PixelPath Lab — Independent Software Studio</title>
+  <meta name="description" content="PixelPath Lab is an independent software studio based in Cebu, Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://pixelpathlab.com">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pixelpathlab.com">
+  <meta property="og:site_name" content="PixelPath Lab">
+  <meta property="og:title" content="PixelPath Lab — Independent Software Studio">
+  <meta property="og:description" content="Independent software studio based in Cebu, Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="PixelPath Lab — Independent Software Studio">
+  <meta name="twitter:description" content="Independent software studio based in Cebu, Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "PixelPath Software Publishing House",
+    "url": "https://pixelpathlab.com",
+    "description": "Independent software studio based in Cebu, Philippines.",
+    "foundingLocation": { "@type": "Place", "name": "Cebu, Philippines" },
+    "sameAs": [
+      "https://runmateapp.com",
+      "https://avatarflex.com",
+      "https://lastletter.app",
+      "https://makeintegration.com"
+    ]
+  }
+  </script>
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
@@ -547,7 +582,22 @@
   <!-- NAV -->
   <nav id="nav">
     <div class="wrap">
-      <a class="nav-logo" href="#">PixelPath Lab</a>
+      <a class="nav-logo" href="#" style="display:flex;align-items:center;gap:11px;text-decoration:none;">
+        <!-- P-mark: 2×3 dot grid, path traces letter P in electric blue -->
+        <svg width="22" height="32" viewBox="-3 -3 22 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- ghost dots -->
+          <circle cx="16" cy="26" r="2" fill="var(--accent)" opacity="0.14"/>
+          <!-- P-path line -->
+          <polyline points="0,0 16,0 16,13 0,13 0,26" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+          <!-- path dots -->
+          <circle cx="0"  cy="0"  r="2.8" fill="var(--accent)"/>
+          <circle cx="16" cy="0"  r="2.8" fill="var(--accent)"/>
+          <circle cx="16" cy="13" r="2.8" fill="var(--accent)"/>
+          <circle cx="0"  cy="13" r="2.8" fill="var(--accent)"/>
+          <circle cx="0"  cy="26" r="2.8" fill="var(--accent)"/>
+        </svg>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--fg);">PixelPath Lab</span>
+      </a>
       <ul class="nav-links">
         <li><a href="#products">Products</a></li>
         <li><a href="#about">About</a></li>
@@ -596,23 +646,8 @@
           </a>
         </div>
 
-        <!-- Last Letter Card -->
-        <div class="product-card" style="transition-delay: 0.15s;">
-          <span class="card-status status-live">● Live</span>
-          <div class="card-name">Last Letter</div>
-          <p class="card-desc">Compose messages to be delivered to loved ones at a future time. A digital legacy app built for the moments that matter most.</p>
-          <div class="card-meta">
-            <span class="meta-tag">Web</span>
-            <span class="meta-tag">Personal</span>
-            <span class="meta-tag">Legacy</span>
-          </div>
-          <a href="https://lastletter.app" target="_blank" class="card-link">
-            lastletter.app <span class="arrow">→</span>
-          </a>
-        </div>
-
         <!-- AvatarFlex Card -->
-        <div class="product-card" style="transition-delay: 0.25s;">
+        <div class="product-card" style="transition-delay: 0.15s;">
           <span class="card-status status-live">● Live</span>
           <div class="card-name">AvatarFlex</div>
           <p class="card-desc">Roblox avatar showcase and community battles. Create stat cards, compete in head-to-head voting, earn flex points, climb leaderboards. 1,200+ active users.</p>
@@ -623,6 +658,21 @@
           </div>
           <a href="https://avatarflex.com" target="_blank" class="card-link">
             avatarflex.com <span class="arrow">→</span>
+          </a>
+        </div>
+
+        <!-- Last Letter Card -->
+        <div class="product-card" style="transition-delay: 0.25s;">
+          <span class="card-status status-live">● Live</span>
+          <div class="card-name">Last Letter</div>
+          <p class="card-desc">Compose messages to be delivered to loved ones at a future time. A digital legacy app built for the moments that matter most.</p>
+          <div class="card-meta">
+            <span class="meta-tag">Web</span>
+            <span class="meta-tag">Personal</span>
+            <span class="meta-tag">Legacy</span>
+          </div>
+          <a href="https://lastletter.app" target="_blank" class="card-link">
+            lastletter.app <span class="arrow">→</span>
           </a>
         </div>
 
@@ -641,7 +691,7 @@
           </a>
         </div>
 
-        <!-- Untitled Game Card -->
+        <!-- RPG Game Card -->
         <div class="product-card card-locked" style="transition-delay: 0.45s;">
           <span class="card-status status-dev">◎ In Development</span>
           <div class="card-name">RPG Game</div>
@@ -681,9 +731,9 @@
         </div>
         <div class="about-right">
           <div class="about-body">
-            <p>PixelPath Lab is a solo independent software studio. Not an agency. Not a freelancer. A studio that owns what it builds.</p>
-            <p>Every product ships with intention — designed for real people, built to last, and measured by whether people actually use it.</p>
-            <p>Based in the Philippines, building for the world.</p>
+            <p>PixelPath Lab builds and ships its own software products. Four live. Real users across the Philippines and beyond.</p>
+            <p>Every product is designed for real people — measured not by polish, but by whether people actually use it.</p>
+            <p>Based in Cebu, Philippines. Building for the world.</p>
           </div>
           <div class="about-detail">
             <div class="about-detail-item">Cebu, Philippines</div>
@@ -699,12 +749,23 @@
     <div class="wrap">
       <div class="footer-inner">
         <div class="footer-left">
-          <div class="footer-name">PixelPath Software Publishing House</div>
+          <div class="footer-name" style="display:flex;align-items:center;gap:10px;">
+            <svg width="14" height="20" viewBox="-2 -2 18 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="26" r="1.5" fill="var(--accent)" opacity="0.14"/>
+              <polyline points="0,0 16,0 16,13 0,13 0,26" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+              <circle cx="0"  cy="0"  r="2.2" fill="var(--accent)"/>
+              <circle cx="16" cy="0"  r="2.2" fill="var(--accent)"/>
+              <circle cx="16" cy="13" r="2.2" fill="var(--accent)"/>
+              <circle cx="0"  cy="13" r="2.2" fill="var(--accent)"/>
+              <circle cx="0"  cy="26" r="2.2" fill="var(--accent)"/>
+            </svg>
+            PixelPath Lab
+          </div>
           <div class="footer-sub">/ Built in the Philippines</div>
         </div>
         <div class="footer-right">
-          <div class="footer-dti">DTI Business Name No. 8145950 · Philippines</div>
-          <div class="footer-year">© 2026 PixelPath Software Publishing House. All rights reserved.</div>
+          <div class="footer-dti">DTI Registered Business · Philippines</div>
+          <div class="footer-year">© 2026 PixelPath Lab. All rights reserved.</div>
         </div>
       </div>
     </div>
