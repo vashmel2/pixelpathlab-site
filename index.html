@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PixelPath Lab — Independent Software Studio</title>
-  <meta name="description" content="PixelPath Lab is an independent software studio based in Cebu, Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
+  <meta name="description" content="PixelPath Lab is an independent software studio based in Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://pixelpathlab.com">
 
@@ -13,7 +13,7 @@
   <meta property="og:url" content="https://pixelpathlab.com">
   <meta property="og:site_name" content="PixelPath Lab">
   <meta property="og:title" content="PixelPath Lab — Independent Software Studio">
-  <meta property="og:description" content="Independent software studio based in Cebu, Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
+  <meta property="og:description" content="Independent software studio based in Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
   <meta property="og:image" content="https://pixelpathlab.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -21,7 +21,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="PixelPath Lab — Independent Software Studio">
-  <meta name="twitter:description" content="Independent software studio based in Cebu, Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
+  <meta name="twitter:description" content="Independent software studio based in Philippines. Home of RunMate, AvatarFlex, Last Letter, and MakeIntegration.">
   <meta name="twitter:image" content="https://pixelpathlab.com/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -32,8 +32,8 @@
     "@type": "Organization",
     "name": "PixelPath Software Publishing House",
     "url": "https://pixelpathlab.com",
-    "description": "Independent software studio based in Cebu, Philippines.",
-    "foundingLocation": { "@type": "Place", "name": "Cebu, Philippines" },
+    "description": "Independent software studio based in Philippines.",
+    "foundingLocation": { "@type": "Place", "name": "Philippines" },
     "sameAs": [
       "https://runmateapp.com",
       "https://avatarflex.com",
@@ -158,18 +158,18 @@
 
     /* ── HERO ─────────────────────────────────────────── */
     #hero {
-      min-height: 100vh;
+      min-height: 95vh;
       display: flex;
       align-items: center;
       padding-top: 80px;
     }
     .hero-inner {
-      padding: 120px 0 100px;
+      padding: 100px 0 40px;
     }
     .hero-label {
       font-family: 'DM Mono', monospace;
       font-size: 12px;
-      color: var(--accent);
+      color: var(--fg-dim);
       letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 40px;
@@ -182,8 +182,8 @@
     h1.hero-title {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 800;
-      font-size: clamp(72px, 10vw, 148px);
-      line-height: 0.92;
+      font-size: clamp(56px, 8vw, 120px);
+      line-height: 0.95;
       letter-spacing: -0.03em;
       color: var(--fg);
       margin-bottom: 44px;
@@ -230,10 +230,10 @@
     /* ── SECTION LABEL ─────────────────────────────────── */
     .section-label {
       font-family: 'DM Mono', monospace;
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--fg-dimmer);
+      color: rgba(240,239,236,0.6);
       margin-bottom: 56px;
       display: flex;
       align-items: center;
@@ -248,6 +248,43 @@
       flex: 1;
       height: 1px;
       background: var(--border);
+    }
+
+    /* ── STATS STRIP ────────────────────────────────────── */
+    .stats-strip {
+      padding: 0 0 100px;
+    }
+    .stats-row {
+      display: flex;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-item {
+      flex: 1;
+      padding: 28px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .stat-item.visible { opacity: 1; transform: none; }
+    .stat-item + .stat-item { border-left: 1px solid var(--border); }
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(240,239,236,0.5);
     }
 
     /* ── PRODUCTS ─────────────────────────────────────── */
@@ -416,6 +453,27 @@
     }
 
     /* steam badge */
+    /* wide card — full-width locked treatment */
+    .card-wide {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0;
+      align-items: center;
+    }
+    .card-wide-left { flex: 1; }
+    .card-wide-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 0 0 0 48px;
+      border-left: 1px solid var(--border);
+      margin-left: 48px;
+      min-width: 180px;
+    }
+
     .steam-badge {
       margin-top: 32px;
       display: inline-flex;
@@ -499,8 +557,8 @@
       align-items: center;
       gap: 14px;
       font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      color: var(--fg-dimmer);
+      font-size: 13px;
+      color: rgba(240,239,236,0.6);
       letter-spacing: 0.06em;
     }
     .about-detail-item::before {
@@ -517,7 +575,7 @@
     }
     .footer-inner {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 24px;
@@ -537,8 +595,8 @@
     }
     .footer-sub {
       font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--fg-dimmer);
+      font-size: 12px;
+      color: rgba(240,239,236,0.6);
       letter-spacing: 0.08em;
     }
     .footer-right {
@@ -546,15 +604,15 @@
     }
     .footer-dti {
       font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--fg-dimmer);
+      font-size: 12px;
+      color: rgba(240,239,236,0.6);
       letter-spacing: 0.06em;
       line-height: 1.8;
     }
     .footer-year {
       font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: oklch(0.65 0.22 248 / 0.5);
+      font-size: 12px;
+      color: rgba(240,239,236,0.5);
       letter-spacing: 0.06em;
     }
 
@@ -614,19 +672,39 @@
   <section id="hero">
     <div class="wrap">
       <div class="hero-inner">
-        <div class="hero-label" id="hero-label">Independent Software Studio</div>
-        <h1 class="hero-title" id="hero-title">Pixel<br>Path<br>Lab</h1>
+        <div class="hero-label" id="hero-label">PixelPath Lab · Independent Software Studio</div>
+        <h1 class="hero-title" id="hero-title">Homegrown.<br>World-ready.</h1>
         <p class="hero-tagline" id="hero-tagline">
-          Quietly building products people use.<br>
-          Based in the Philippines.
+          Four products built in the Philippines.<br>
+          69,000+ users and growing.
         </p>
-        <div class="hero-scroll" id="hero-scroll">
-          <div class="scroll-line"></div>
-          <span class="scroll-label">Scroll to explore</span>
-        </div>
       </div>
     </div>
   </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="wrap">
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Live Products</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">69K+</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">2026</div>
+          <div class="stat-label">Est.</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">PH</div>
+          <div class="stat-label">Philippines</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- PRODUCTS -->
   <section id="products">
@@ -655,7 +733,7 @@
         <div class="product-card" style="transition-delay: 0.15s;">
           <span class="card-status status-live">● Live</span>
           <div class="card-name">AvatarFlex</div>
-          <p class="card-desc">Roblox avatar showcase and community battles. Create stat cards, compete in head-to-head voting, earn flex points, climb leaderboards. 1,200+ active users.</p>
+          <p class="card-desc">Roblox avatar showcase and community battles. Create stat cards, compete in head-to-head voting, earn flex points, climb leaderboards. 69,000+ active users.</p>
           <div class="card-meta">
             <span class="meta-tag">Web</span>
             <span class="meta-tag">Roblox Community</span>
@@ -697,16 +775,22 @@
         </div>
 
         <!-- RPG Game Card -->
-        <div class="product-card card-locked" style="transition-delay: 0.45s;">
-          <span class="card-status status-dev">◎ In Development</span>
-          <div class="card-name">RPG Game</div>
-          <p class="card-desc">An RPG in development. A world being built carefully, a story worth telling. Details kept close until it's ready.</p>
-          <div class="card-meta">
-            <span class="meta-tag">PC · Steam</span>
-            <span class="meta-tag">RPG</span>
-            <span class="meta-tag">TBA 2026</span>
+        <div class="product-card card-locked card-wide" style="transition-delay: 0.45s;">
+          <div class="card-wide-left">
+            <span class="card-status status-dev">◎ In Development</span>
+            <div class="card-name">RPG Game</div>
+            <p class="card-desc">An RPG in development. A world being built carefully, a story worth telling. Details kept close until it's ready.</p>
+            <div class="card-meta">
+              <span class="meta-tag">PC · Steam</span>
+              <span class="meta-tag">RPG</span>
+              <span class="meta-tag">TBA 2026</span>
+            </div>
+            <div class="steam-badge">
+              <span class="steam-dot"></span>
+              Targeting Steam release
+            </div>
           </div>
-          <div class="locked-overlay">
+          <div class="card-wide-right">
             <div class="lock-icon">
               <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="1" y="7" width="12" height="9" rx="1.5" stroke="white" stroke-width="1.3"/>
@@ -714,10 +798,6 @@
               </svg>
             </div>
             <span class="locked-text">Identity unrevealed</span>
-          </div>
-          <div class="steam-badge">
-            <span class="steam-dot"></span>
-            Targeting Steam release
           </div>
         </div>
       </div>
@@ -732,18 +812,18 @@
       </div>
       <div class="about-inner">
         <div class="about-left">
-          <div class="about-headline">Products,<br>not<br>promises.</div>
+          <div class="about-headline">We own<br>what we<br>build.</div>
         </div>
         <div class="about-right">
           <div class="about-body">
-            <p>PixelPath Lab is a product studio focused on building software that earns its place in people's lives.</p>
-            <p>We don't stop at launch. Every product is shaped by real usage, real feedback, and continuous iteration.</p>
-            <p>Four live products. A growing user base across the Philippines and beyond. One focus: build things people actually come back to.</p>
-            <p>Based in Cebu, Philippines. Building for the world.</p>
+            <p>PixelPath Lab builds, owns, and ships its own software. No client work. No outsourcing. Every product in the portfolio is fully independent.</p>
+            <p>We don't stop at launch. Every product is shaped by real usage, real feedback, and continuous improvement — until people actually come back to it.</p>
+            <p>Built in the Philippines. Used across Southeast Asia and beyond. We're just getting started.</p>
           </div>
           <div class="about-detail">
-            <div class="about-detail-item">Cebu, Philippines</div>
+            <div class="about-detail-item">Philippines</div>
             <div class="about-detail-item">Consumer apps &amp; games</div>
+            <div class="about-detail-item">DTI No. 8145950 · Est. 2026</div>
           </div>
         </div>
       </div>
@@ -768,6 +848,7 @@
             PixelPath Lab
           </div>
           <div class="footer-sub">PixelPath Software Publishing House</div>
+          <a href="mailto:studio@pixelpathlab.com" class="footer-sub" style="color:rgba(240,239,236,0.5);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--fg)'" onmouseout="this.style.color='rgba(240,239,236,0.5)'">studio@pixelpathlab.com</a>
         </div>
         <div class="footer-right">
           <div class="footer-dti">DTI Business Name No. 8145950 · Philippines</div>
@@ -789,7 +870,6 @@
       setTimeout(() => document.getElementById('hero-label').classList.add('visible'), 100);
       setTimeout(() => document.getElementById('hero-title').classList.add('visible'), 200);
       setTimeout(() => document.getElementById('hero-tagline').classList.add('visible'), 400);
-      setTimeout(() => document.getElementById('hero-scroll').classList.add('visible'), 700);
     });
 
     // ── Scroll-triggered fade-ups
@@ -802,7 +882,7 @@
       });
     }, { threshold: 0.12 });
 
-    document.querySelectorAll('.fade-up, .product-card, .about-left, .about-right').forEach(el => {
+    document.querySelectorAll('.fade-up, .product-card, .about-left, .about-right, .stat-item').forEach(el => {
       observer.observe(el);
     });
 
