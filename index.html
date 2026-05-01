@@ -309,21 +309,6 @@
       .card-name { font-size: 28px; }
       .card-desc { margin-bottom: 20px; }
 
-      .card-wide {
-        grid-template-columns: 1fr;
-      }
-      .card-wide-right {
-        border-left: none;
-        border-top: 1px solid var(--border);
-        margin-left: 0;
-        padding: 20px 0 0;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        min-width: unset;
-      }
-
       .section-label { margin-bottom: 36px; }
 
       #products { padding: 60px 0; }
@@ -331,8 +316,9 @@
       .about-headline { font-size: 36px; }
       .about-body { font-size: 15px; }
 
-      .footer-inner { flex-direction: column; align-items: flex-start; }
-      .footer-right { text-align: left; }
+      .footer-inner { flex-direction: column; align-items: center; }
+      .footer-left { align-items: center; }
+      .footer-right { text-align: center; }
     }
 
     /* ── PRODUCTS ─────────────────────────────────────── */
@@ -391,6 +377,7 @@
       padding: 5px 10px;
       border-radius: 4px;
       display: inline-block;
+      white-space: nowrap;
       margin-bottom: 28px;
     }
     .status-live {
@@ -505,21 +492,33 @@
     .card-wide {
       grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 0;
-      align-items: center;
+      grid-template-columns: 1fr;
     }
     .card-wide-left { flex: 1; }
     .card-wide-right {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      padding: 0 0 0 48px;
-      border-left: 1px solid var(--border);
-      margin-left: 48px;
-      min-width: 180px;
+      gap: 12px;
+      padding: 20px 0 0;
+      border-top: 1px solid var(--border);
+    }
+    @media (min-width: 701px) {
+      .card-wide {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+      }
+      .card-wide-right {
+        flex-direction: column;
+        justify-content: center;
+        gap: 16px;
+        padding: 0 0 0 48px;
+        border-top: none;
+        border-left: 1px solid var(--border);
+        margin-left: 48px;
+        min-width: 180px;
+      }
     }
 
     .steam-badge {
@@ -648,7 +647,10 @@
       letter-spacing: 0.08em;
     }
     .footer-right {
-      text-align: right;
+      text-align: center;
+    }
+    @media (min-width: 701px) {
+      .footer-right { text-align: right; }
     }
     .footer-dti {
       font-family: 'DM Mono', monospace;
